@@ -1,10 +1,10 @@
 const config = require('../config');
 const { cmd, commands } = require('../command');
 
-// Array of different fancy text styles for ZAIDI TEXK-MD
+// Array of different fancy text styles for 𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃
 const botNameStyles = [
     
-    "𓆩ZAIDI𓆪-𝙼𝙳"
+    "𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃"
 ];
 
 // Track current style index
@@ -55,8 +55,8 @@ async (conn, mek, m, { from, quoted, sender, reply }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363423196146172@newsletter',
-                    newsletterName: "𓆩ZAIDI-MD𓆪",
+                    newsletterJid: '120363424804601329@newsletter',
+                    newsletterName: "𓆩𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃𓆪",
                     serverMessageId: 143
                 }
             }
@@ -82,7 +82,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         const message = await conn.sendMessage(from, { text: '*PINGING...*' })
         const endTime = Date.now()
         const ping = endTime - startTime
-        await conn.sendMessage(from, { text: `*🔥 ZAIDI TEXK-MD SPEED : ${ping}ms*` }, { quoted: message })
+        await conn.sendMessage(from, { text: `*🔥 𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃 SPEED : ${ping}ms*` }, { quoted: message })
     } catch (e) {
         console.log(e)
         reply(`${e}`)
