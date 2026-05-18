@@ -19,7 +19,7 @@ async (conn, mek, m, { from, sender, reply }) => {
         const startTime = Date.now();
         
         // URLs
-        const imageUrl = "https://files.catbox.moe/tguf7z.jpg";
+        const imageUrl = "https://eliteprotech-url.zone.id/1778606368589obfzir.jpg";
         const videoNoteUrl = "https://a.top4top.io/m_3771ch8ca0.mp4";
         
         // Calculate ping
