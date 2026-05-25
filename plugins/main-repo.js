@@ -13,7 +13,7 @@ cmd({
     filename: __filename,
 },
 async (conn, mek, m, { from, reply }) => {
-    const githubRepoURL = 'https://github.com/me9900-say/ZaidiF-Md/fork';
+    const githubRepoURL = 'https://github.com/qadeertechx-76/-';
 
     try {
         // Extract username and repo name from the URL
@@ -33,7 +33,7 @@ async (conn, mek, m, { from, reply }) => {
 
         // Send image with caption
         await conn.sendMessage(from, {
-            image: { url: `https://files.catbox.moe/tguf7z.jpg` },
+            image: { url: `https://eliteprotech-url.zone.id/1778606368589obfzir.jpg` },
             caption: formattedInfo,
             contextInfo: { 
                 mentionedJid: [m.sender],
@@ -41,7 +41,7 @@ async (conn, mek, m, { from, reply }) => {
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363424804601329@newsletter',
-                    newsletterName: '𓆩Qadeer KD𓆪',
+                    newsletterName: '𓆩𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃𓆪',
                     serverMessageId: 143
                 }
             }
