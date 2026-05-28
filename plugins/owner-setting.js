@@ -1,119 +1,220 @@
-const { cmd ,commands } = require('../command');
-const { exec } = require('child_process');
-const config = require('../config');
-const {sleep} = require('../lib/functions')
-// 1. Shutdown Bot
+const { cmd } = require('../command');
+
+// ================================
+// Shutdown Bot
+// ================================
 cmd({
     pattern: "shutdown",
-    desc: "Shutdown the bot.",
+    desc: "Shutdown the bot",
     category: "owner",
     react: "🛑",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, reply }) => {
-    if (!isOwner) return reply("❌ You are not the owner!");
-    reply("🛑 Shutting down...").then(() => process.exit());
+async (conn, mek, m, { isOwner, reply }) => {
+
+    if (!isOwner) {
+        return reply("❌ Only owner can use this command.");
+    }
+
+    await reply("🛑 Shutting down bot...");
+    process.exit(0);
 });
-// 2. Broadcast Message to All Groups
+
+
+// ================================
+// Broadcast Message
+// ================================
 cmd({
     pattern: "broadcast",
-    desc: "Broadcast a message to all groups.",
+    alias: ["bc"],
+    desc: "Broadcast message to all groups",
     category: "owner",
     react: "📢",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, args, reply }) => {
-    if (!isOwner) return reply("❌ You are not the owner!");
-    if (args.length === 0) return reply("📢 Please provide a message to broadcast.");
-    const message = args.join(' ');
-    const groups = Object.keys(await conn.groupFetchAllParticipating());
-    for (const groupId of groups) {
-        await conn.sendMessage(groupId, { text: message }, { quoted: mek });
+async (conn, mek, m, { isOwner, args, reply }) => {
+
+    if (!isOwner) {
+        return reply("❌ Only owner can use this command.");
     }
-    reply("📢 Message broadcasted to all groups.");
+
+    if (!args[0]) {
+        return reply("📢 Give a message to broadcast.");
+    }
+
+    try {
+
+        const text = args.join(" ");
+        const groups = Object.keys(
+            await conn.groupFetchAllParticipating()
+        );
+
+        for (let jid of groups) {
+
+            await conn.sendMessage(jid, {
+                text: `📢 *Broadcast Message*\n\n${text}`
+            });
+
+        }
+
+        reply(`✅ Broadcast sent to ${groups.length} groups.`);
+
+    } catch (e) {
+        console.log(e);
+        reply("❌ Broadcast failed.");
+    }
 });
-// 3. Set Profile Picture
+
+
+// ================================
+// Set Profile Picture
+// ================================
 cmd({
     pattern: "setpp",
-    desc: "Set bot profile picture.",
+    desc: "Set bot profile picture",
     category: "owner",
     react: "🖼️",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, quoted, reply }) => {
-    if (!isOwner) return reply("❌ You are not the owner!");
-    if (!quoted || !quoted.message.imageMessage) return reply("❌ Please reply to an image.");
+async (conn, mek, m, { isOwner, quoted, reply }) => {
+
+    if (!isOwner) {
+        return reply("❌ Only owner can use this command.");
+    }
+
+    if (!quoted) {
+        return reply("❌ Reply to an image.");
+    }
+
     try {
-        const media = await conn.downloadMediaMessage(quoted);
-        await conn.updateProfilePicture(conn.user.jid, { url: media });
-        reply("🖼️ Profile picture updated successfully!");
-    } catch (error) {
-        reply(`❌ Error updating profile picture: ${error.message}`);
+
+        const media = await quoted.download();
+
+        await conn.updateProfilePicture(
+            conn.user.id,
+            media
+        );
+
+        reply("✅ Profile picture updated.");
+
+    } catch (e) {
+        console.log(e);
+        reply("❌ Failed to update profile picture.");
     }
 });
 
-// 6. Clear All Chats
+
+// ================================
+// Clear Chats
+// ================================
 cmd({
     pattern: "clearchats",
-    desc: "Clear all chats from the bot.",
+    desc: "Delete all chats",
     category: "owner",
     react: "🧹",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, reply }) => {
-    if (!isOwner) return reply("❌ You are not the owner!");
+async (conn, mek, m, { isOwner, reply }) => {
+
+    if (!isOwner) {
+        return reply("❌ Only owner can use this command.");
+    }
+
     try {
-        const chats = conn.chats.all();
-        for (const chat of chats) {
-            await conn.modifyChat(chat.jid, 'delete');
+
+        const chats = Object.keys(conn.chats);
+
+        for (let chat of chats) {
+            await conn.chatModify(
+                { delete: true },
+                chat
+            );
         }
-        reply("🧹 All chats cleared successfully!");
-    } catch (error) {
-        reply(`❌ Error clearing chats: ${error.message}`);
+
+        reply("✅ All chats cleared.");
+
+    } catch (e) {
+        console.log(e);
+        reply("❌ Failed to clear chats.");
     }
 });
 
-// 8. Group JIDs List
+
+// ================================
+// Group JIDs
+// ================================
 cmd({
     pattern: "gjid",
-    desc: "Get the list of JIDs for all groups the bot is part of.",
+    desc: "Get all group JIDs",
     category: "owner",
     react: "📝",
     filename: __filename
 },
-async (conn, mek, m, { from, isOwner, reply }) => {
-    if (!isOwner) return reply("❌ You are not the owner!");
-    const groups = await conn.groupFetchAllParticipating();
-    const groupJids = Object.keys(groups).join('\n');
-    reply(`📝 *Group JIDs:*\n\n${groupJids}`);
+async (conn, mek, m, { isOwner, reply }) => {
+
+    if (!isOwner) {
+        return reply("❌ Only owner can use this command.");
+    }
+
+    try {
+
+        const groups = await conn.groupFetchAllParticipating();
+
+        let txt = "📝 *Group JIDs List*\n\n";
+
+        for (let jid in groups) {
+            txt += `• ${jid}\n`;
+        }
+
+        reply(txt);
+
+    } catch (e) {
+        console.log(e);
+        reply("❌ Failed to fetch group JIDs.");
+    }
 });
 
 
-// delete 
-
+// ================================
+// Delete Message
+// ================================
 cmd({
-pattern: "delete",
-react: "❌",
-alias: ["del"],
-desc: "delete message",
-category: "group",
-use: '.del',
-filename: __filename
+    pattern: "delete",
+    alias: ["del"],
+    desc: "Delete replied message",
+    category: "group",
+    react: "❌",
+    filename: __filename
 },
-async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants,  isItzcp, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-if (!isOwner ||  !isAdmins) return;
-try{
-if (!m.quoted) return reply(mg.notextfordel);
-const key = {
-            remoteJid: m.chat,
-            fromMe: false,
-            id: m.quoted.id,
-            participant: m.quoted.sender
-        }
-        await conn.sendMessage(m.chat, { delete: key })
-} catch(e) {
-console.log(e);
-reply('successful..👨‍💻✅')
-} 
-})
+async (conn, mek, m, {
+    isOwner,
+    isAdmins,
+    isBotAdmins,
+    quoted,
+    reply
+}) => {
 
+    // Permission Check
+    if (!isOwner && !isAdmins) {
+        return reply("❌ Only owner or admin can use this command.");
+    }
+
+    if (!isBotAdmins) {
+        return reply("❌ Bot must be admin.");
+    }
+
+    if (!quoted) {
+        return reply("❌ Reply to a message.");
+    }
+
+    try {
+
+        await conn.sendMessage(m.chat, {
+            delete: quoted.key
+        });
+
+    } catch (e) {
+        console.log(e);
+        reply("❌ Failed to delete message.");
+    }
+});
