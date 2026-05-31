@@ -1,6 +1,5 @@
-const { arslan } = require('../arslan');
+const { cmd } = require('../command');
 const axios = require('axios');
-const { fakevCard } = require('../lib/fakevCard');
 
 const XV_API = "https://arslan-apis-v2.vercel.app";
 
@@ -36,137 +35,96 @@ async function react(sock, mek, emoji) {
 // 📦 Stylish info box
 function xBox(data) {
     return `
-╔═━═━═❰ *Qadeer-KD* ❱═━═━═╗
-┃ 🔞 *XVIDEO DOWNLOADER*
-┃━━━━━━━━━━━━━━━━━━
-┃ 📌 *Title:* ${data.title}
-┃ ⏱ *Duration:* ${data.duration || "N/A"}
-┃ 👁️ *Views:* ${data.views || "N/A"}
-┃ 🔥 *Quality:* HD
-╚━━━━━━━━━━━━━━━━━━╝`;
+‎*╔ஜ۩▒█ *ᴀʀꜱʟᴀɴ X ᴍᴅ* █▒۩ஜ╗*
+*|* *_ᴀʀꜱʟᴀɴ-ᴍᴅ xᴠɪᴅᴇᴏs_* 
+*|┉┉┉┉◉◉◉┉┉┉┉┉┉┉━•⟢*
+*|▸ 📌 ᴛɪᴛʟᴇ:* ${data.title}
+*|▸ ⏱ ᴅᴜʀᴀᴛɪᴏɴ:* ${data.duration || "N/A"}
+*|▸ 👁️ ᴠɪᴇᴡs:* ${data.views || "N/A"}
+*|▸ 🥵 ᴏɴʟʏ:* 🔞.... 
+*╰━━━━━━━━━━━━━━━━━━⊷*`;
 }
 
 // 🔍 Search API
 async function searchXvideos(query) {
     const api = `${XV_API}/download/xvideosSearch?text=${encodeURIComponent(query)}`;
-
-    const res = await tryRequest(() =>
-        axios.get(api, AXIOS_DEFAULTS)
-    );
-
-    if (res.data?.status && res.data.result?.length) {
+    const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
+    if (res.data?.status && res.data.result?.length)
         return res.data.result;
-    }
-
     throw new Error("Search failed");
 }
 
 // 🎬 Download API
 async function downloadXvideo(url) {
     const api = `${XV_API}/download/xvideosDown?url=${encodeURIComponent(url)}`;
-
-    const res = await tryRequest(() =>
-        axios.get(api, AXIOS_DEFAULTS)
-    );
-
-    if (res.data?.status && res.data.result?.url) {
+    const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
+    if (res.data?.status && res.data.result?.url)
         return res.data.result;
-    }
-
     throw new Error("Download failed");
 }
 
 // ===============================
-// 🔞 COMMAND: .xxx <query|link>
+// 🔞 COMMAND: .xvideo <query|link>
 // ===============================
-arslan({
-    pattern: "xxx",
-    alias: ["xvideo", "porn", "sex", "xvideos", "sexy"],
-    desc: "Search and download xvideos",
+cmd({
+    pattern: "xxxvideo",
+    alias: ["xxx", "porn", "sex", "sexyvideos", "pornhub", "xvideos", "sexy"],
+    desc: "Search or download Xvideos",
     category: "adult",
     react: "🔞",
     filename: __filename
-},
-async (sock, mek, m, { reply }) => {
+}, async (sock, mek, m, { reply }) => {
 
     try {
-
-        const text =
-            m.message?.conversation ||
-            m.message?.extendedTextMessage?.text ||
-            "";
-
+        const text = m.message?.conversation || m.message?.extendedTextMessage?.text || "";
         const query = text.split(" ").slice(1).join(" ").trim();
 
-        if (!query) {
-            return reply(
-                `⚠️ *Usage Example:*\n.xxx mia khalifa`
-            );
-        }
+        if (!query)
+            return reply("⚠️ *Usage:*\n.xvideo <name or link>");
 
         await react(sock, mek, "🔍");
 
         let videoData;
         let videoUrl;
 
-        // 🔗 Direct URL
+        // 🔗 Direct link
         if (query.startsWith("http")) {
-
             videoUrl = query;
-
-            videoData = {
-                title: "Xvideos Video",
-                duration: "Unknown",
-                views: "Unknown"
-            };
-
-        } else {
-
-            // 🔎 Search Video
+            videoData = { title: "Xvideos Video", duration: "Unknown" };
+        } 
+        // 🔎 Search
+        else {
             const results = await searchXvideos(query);
-
             videoData = results[0];
             videoUrl = videoData.url;
         }
 
-        // 📦 Send Info
+        // 📦 Info box
         await sock.sendMessage(m.chat, {
-            image: {
-                url: videoData.thumb || "https://files.catbox.moe/16i1l7.jpg"
-            },
+            image: { url: videoData.thumb || "https://files.catbox.moe/16i1l7.jpg" },
             caption: xBox(videoData)
-        }, {
-            quoted: fakevCard
-        });
+        }, { quoted: mek });
 
         await react(sock, mek, "⏳");
 
-        // 🎬 Download Video
+        // 🎬 Download
         const file = await downloadXvideo(videoUrl);
 
         await sock.sendMessage(m.chat, {
-            video: {
-                url: file.url
-            },
+            video: { url: file.url },
             mimetype: "video/mp4",
             fileName: `${videoData.title}.mp4`,
             caption: `
-╔═━═━═❰ *Qadeer-KD* ❱═━═━═╗
-┃ ✅ *VIDEO DOWNLOADED*
-┃ 🚀 Powered By Qadeer-KD
-╚━━━━━━━━━━━━━━━━━━╝`
-        }, {
-            quoted: fakevCard
-        });
+‎*╔ஜ۩▒█ *ᴀʀꜱʟᴀɴ X ᴍᴅ* █▒۩ஜ╗*
+‎*| 𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 *ᴀʀꜱʟᴀɴ-ᴍᴅ* 
+‎*╰━━━━━━━━━━━━━━━━━━⊷*`
+        }, { quoted: mek });
 
         await react(sock, mek, "✅");
 
     } catch (e) {
-
-        console.log(e);
-
+        console.error(e);
         await react(sock, mek, "❌");
-
-        reply("❌ Failed to download video!");
+        reply("❌ Download failed!");
     }
 });
