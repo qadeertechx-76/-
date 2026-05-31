@@ -35,8 +35,8 @@ async function react(sock, mek, emoji) {
 // 📦 Stylish info box
 function xBox(data) {
     return `
-‎*╔ஜ۩▒█ *ᴀʀꜱʟᴀɴ X ᴍᴅ* █▒۩ஜ╗*
-*|* *_ᴀʀꜱʟᴀɴ-ᴍᴅ xᴠɪᴅᴇᴏs_* 
+‎*╔ஜ۩▒█ *𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃* █▒۩ஜ╗*
+*|* *_𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃 xᴠɪᴅᴇᴏs_* 
 *|┉┉┉┉◉◉◉┉┉┉┉┉┉┉━•⟢*
 *|▸ 📌 ᴛɪᴛʟᴇ:* ${data.title}
 *|▸ ⏱ ᴅᴜʀᴀᴛɪᴏɴ:* ${data.duration || "N/A"}
@@ -68,7 +68,7 @@ async function downloadXvideo(url) {
 // ===============================
 cmd({
     pattern: "xxxvideo",
-    alias: ["xxx", "porn", "sex", "sexyvideos", "pornhub", "xvideos", "sexy"],
+    alias: ["xxx", "porn", "sex", "sexyvideos", "pornhub", "xvideos", "sexy", "😝"],
     desc: "Search or download Xvideos",
     category: "adult",
     react: "🔞",
