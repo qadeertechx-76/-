@@ -1,78 +1,78 @@
 const axios = require('axios');
-const { cmd } = require('../command');
+const { arslan } = require('../arslan');
 
-cmd({
+arslan({
     pattern: "movie",
-    desc: "Fetch detailed information about a movie.",
+    desc: "Get movie info from IMDb",
     category: "utility",
     react: "🎬",
     filename: __filename
-},
-async (conn, mek, m, { from, reply, sender, args }) => {
+}, async (sock, mek, m, { from, q, reply }) => {
     try {
-        // Properly extract the movie name from arguments
-        const movieName = args.length > 0 ? args.join(' ') : m.text.replace(/^[\.\#\$\!]?movie\s?/i, '').trim();
+        const movieName = q;
         
         if (!movieName) {
-            return reply("📽️ Please provide the name of the movie.\nExample: .movie Iron Man");
+            return reply("📽️ *Movie ka naam to do*\nExample: .movie Iron Man");
         }
 
         const apiUrl = `https://apis.davidcyriltech.my.id/imdb?query=${encodeURIComponent(movieName)}`;
-        const response = await axios.get(apiUrl);
+        const { data } = await axios.get(apiUrl);
 
-        if (!response.data.status || !response.data.movie) {
-            return reply("🚫 Movie not found. Please check the name and try again.");
+        if (!data?.status || !data?.movie) {
+            return reply("🚫 *Movie nahi mili* 😕\nNaam check karke dobara try karo");
         }
 
-        const movie = response.data.movie;
+        const movie = data.movie;
         
-        // Format the caption
-        const dec = `
-🎬 *${movie.title}* (${movie.year}) ${movie.rated || ''}
+        // Safe date handling
+        let releaseDate = 'N/A';
+        try {
+            if (movie.released) releaseDate = new Date(movie.released).toLocaleDateString('en-GB');
+        } catch {}
+        
+        // Safe ratings handling
+        const rtRating = movie.ratings?.find(r => r.source === 'Rotten Tomatoes')?.value || 'N/A';
+        const poster = movie.poster && movie.poster !== 'N/A' ? movie.poster : 'https://files.catbox.moe/tguf7z.jpg';
 
-⭐ *IMDb:* ${movie.imdbRating || 'N/A'} | 🍅 *Rotten Tomatoes:* ${movie.ratings.find(r => r.source === 'Rotten Tomatoes')?.value || 'N/A'} | 💰 *Box Office:* ${movie.boxoffice || 'N/A'}
+        const caption = `
+🎬 *${movie.title || 'N/A'}* (${movie.year || 'N/A'}) ${movie.rated || ''}
 
-📅 *Released:* ${new Date(movie.released).toLocaleDateString()}
-⏳ *Runtime:* ${movie.runtime}
-🎭 *Genre:* ${movie.genres}
+⭐ *IMDb:* ${movie.imdbRating || 'N/A'} | 🍅 *Rotten Tomatoes:* ${rtRating} | 💰 *Box Office:* ${movie.boxoffice || 'N/A'}
 
-📝 *Plot:* ${movie.plot}
+📅 *Released:* ${releaseDate}
+⏳ *Runtime:* ${movie.runtime || 'N/A'}
+🎭 *Genre:* ${movie.genres || 'N/A'}
 
-🎥 *Director:* ${movie.director}
-✍️ *Writer:* ${movie.writer}
-🌟 *Actors:* ${movie.actors}
+📝 *Plot:* ${movie.plot || 'N/A'}
 
-🌍 *Country:* ${movie.country}
-🗣️ *Language:* ${movie.languages}
+🎥 *Director:* ${movie.director || 'N/A'}
+✍️ *Writer:* ${movie.writer || 'N/A'}
+🌟 *Actors:* ${movie.actors || 'N/A'}
+
+🌍 *Country:* ${movie.country || 'N/A'}
+🗣️ *Language:* ${movie.languages || 'N/A'}
 🏆 *Awards:* ${movie.awards || 'None'}
 
-[View on IMDb](${movie.imdbUrl})
-`;
+[View on IMDb](${movie.imdbUrl || '#'})
+`.trim();
 
-        // Send message with the requested format
-        await conn.sendMessage(
-            from,
-            {
-                image: { 
-                    url: movie.poster && movie.poster !== 'N/A' ? movie.poster : 'https://files.catbox.moe/tguf7z.jpg'
-                },
-                caption: dec,
-                contextInfo: {
-                    mentionedJid: [sender],
-                    forwardingScore: 999,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363424804601329@newsletter',
-                        newsletterName: '𓆩𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃𓆪',
-                        serverMessageId: 143
-                    }
+        await sock.sendMessage(from, {
+            image: { url: poster },
+            caption: caption,
+            contextInfo: {
+                mentionedJid: [m.sender],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363424804601329@newsletter',
+                    newsletterName: '𓆩𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃𓆪',
+                    serverMessageId: 143
                 }
-            },
-            { quoted: mek }
-        );
+            }
+        }, { quoted: mek });
 
     } catch (e) {
-        console.error('Movie command error:', e);
-        reply(`❌ Error: ${e.message}`);
+        console.error('Movie plugin error:', e);
+        reply(`❌ *Error aa gaya:* ${e.message}\nAPI down ho sakti hai. 2 min baad try karna.`);
     }
 });
