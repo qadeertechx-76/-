@@ -3,7 +3,7 @@ const axios = require('axios')
 
 cmd({
     pattern: "play",
-    alias: ["mp3o", "song5", "qadeer"],
+    alias: ["mp3o", "song5", "qadeer", "song"],
     desc: "Search and download YouTube audio (MP3/M4A)",
     category: "download",
     react: "🎵",
