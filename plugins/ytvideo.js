@@ -4,7 +4,7 @@ const yts = require('yt-search')
 
 cmd({
     pattern: "video",
-    alias: ["ytmp4", "yt4"],
+    alias: ["ytmp4", "yt4", "yt"],
     desc: "Download YouTube video (MP4)",
     category: "download",
     react: "🎥",
@@ -84,7 +84,7 @@ Example:
             video: { url: downloadUrl },
             mimetype: 'video/mp4',
             caption:
-`*_ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʀᴀʜᴍᴀɴ-ᴍᴅ_*`
+`*_ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝐐𝐚𝐝ᥱ֟፝𝐞𝐫-𝐊𝐃_*`
         }, { quoted: mek })
 
     } catch (err) {
