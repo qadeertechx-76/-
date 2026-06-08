@@ -9,7 +9,7 @@ const pipeline = promisify(stream.pipeline);
 
 cmd({
     pattern: "song2",
-    alias: ["play2", "mp32", "audio2"],
+    alias: ["play2", "mp3", "audio2"],
     react: "🎶",
     desc: "Download YouTube song using PrivateZia API",
     category: "main",
@@ -61,7 +61,7 @@ cmd({
             contextInfo: {
                 externalAdReply: {
                     title: title.length > 25 ? `${title.substring(0, 22)}...` : title,
-                    body: `🎶 ${quality.toUpperCase()} | Duration: ${duration}s\n ZAIDI TEXK-MD`,
+                    body: `🎶 ${quality.toUpperCase()} | Duration: ${duration}s\n ₊‧.°.⋆𝐐𝐀𝐃𝚵𝚵𝐑-𝐊𝐃•˚₊‧⋆.`,
                     mediaType: 1,
                     thumbnailUrl: thumbnail,
                     sourceUrl: videoUrl,
