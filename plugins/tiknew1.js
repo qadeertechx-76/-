@@ -37,7 +37,7 @@ async (conn, mek, m, { q, reply }) => {
 📌 *Title:*
 ${res.title || "No Title"}
 
-> powered by rahman-md
+> 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐛𝐲 ₊‧.°.⋆𝐐𝐀𝐃𝚵𝚵𝐑-𝐊𝐃•˚₊‧⋆.
 `;
 
         await conn.sendMessage(
