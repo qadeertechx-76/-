@@ -10,7 +10,7 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from, q, reply, sender, isGroup }) => {
     try {
-        if (!q) return await reply(`👋 *WELCOME IMAGE GENERATOR*\n\n*━━━━━ FORMATS ━━━━━*\n\n*1️⃣ Simple:*\n.welcome username\n\n*2️⃣ With Group Name:*\n.welcome username | groupName\n\n*3️⃣ Full Details:*\n.welcome username | groupName | memberCount\n\n*4️⃣ Custom Avatar:*\n.welcome username | groupName | memberCount | avatarURL\n\n*5️⃣ Custom Avatar + Background:*\n.welcome username | groupName | memberCount | avatarURL | backgroundURL\n\n*━━━━━ EXAMPLES ━━━━━*\n\n.welcome Ahmad\n.welcome Ahmad | DARKZONE\n.welcome Ahmad | DARKZONE | 500\n.welcome Ahmad | DARKZONE | 500 | avatarURL\n.welcome Ahmad | DARKZONE | 500 | avatarURL | bgURL\n\n*━━━━━ REPLY METHOD ━━━━━*\n\n*Reply to an image for avatar:*\n.welcome Ahmad | DARKZONE | 500 | reply\n\n*Reply to image for background:*\n.welcome Ahmad | DARKZONE | 500 | avatarURL | reply\n\n> *DARKZONE-MD*`);
+        if (!q) return await reply(`👋 *WELCOME IMAGE GENERATOR*\n\n*━━━━━ FORMATS ━━━━━*\n\n*1️⃣ Simple:*\n.welcome username\n\n*2️⃣ With Group Name:*\n.welcome username | groupName\n\n*3️⃣ Full Details:*\n.welcome username | groupName | memberCount\n\n*4️⃣ Custom Avatar:*\n.welcome username | groupName | memberCount | avatarURL\n\n*5️⃣ Custom Avatar + Background:*\n.welcome username | groupName | memberCount | avatarURL | backgroundURL\n\n*━━━━━ EXAMPLES ━━━━━*\n\n.welcome Ahmad\n.welcome Ahmad | DARKZONE\n.welcome Ahmad | DARKZONE | 500\n.welcome Ahmad | DARKZONE | 500 | avatarURL\n.welcome Ahmad | DARKZONE | 500 | avatarURL | bgURL\n\n*━━━━━ REPLY METHOD ━━━━━*\n\n*Reply to an image for avatar:*\n.welcome Ahmad | DARKZONE | 500 | reply\n\n*Reply to image for background:*\n.welcome Ahmad | DARKZONE | 500 | avatarURL | reply\n\n> *₊‧.°.⋆𝐐𝐀𝐃𝚵𝚵𝐑-𝐊𝐃•˚₊‧⋆.*`);
 
         await conn.sendMessage(from, { react: { text: '⏳', key: m.key } });
 
@@ -87,7 +87,7 @@ cmd({
         // Send generated image
         await conn.sendMessage(from, {
             image: Buffer.from(res.data),
-            caption: `> WELCOME IMAGE GENERATOR 👋\n\n*STYLISH WELCOME CARD*\n╭━━━━━━━━━━━━━━━━╮\n┇๏ *Username* - ${username}\n┇๏ *Group* - ${guildName}\n┇๏ *Members* - ${memberCount}\n┇๏ *Avatar* - Custom ✅\n┇๏ *Background* - Custom ✅\n╰━━━━━━━━━━━━━━━━╯\n\n> *DARKZONE-MD*`
+            caption: `> WELCOME IMAGE GENERATOR 👋\n\n*STYLISH WELCOME CARD*\n╭━━━━━━━━━━━━━━━━╮\n┇๏ *Username* - ${username}\n┇๏ *Group* - ${guildName}\n┇๏ *Members* - ${memberCount}\n┇๏ *Avatar* - Custom ✅\n┇๏ *Background* - Custom ✅\n╰━━━━━━━━━━━━━━━━╯\n\n> *₊‧.°.⋆𝐐𝐀𝐃𝚵𝚵𝐑-𝐊𝐃•˚₊‧⋆.*`
         }, { quoted: mek });
 
         await conn.sendMessage(from, { react: { text: '✅', key: m.key } });
