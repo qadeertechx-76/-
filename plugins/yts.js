@@ -4,7 +4,7 @@ const { cmd, commands } = require("../command");
 
 cmd({
     pattern: "ytdl",
-    alias: ["yt1", "youtube", "yt"],
+    alias: ["yt1", "youtube", "yt", "video"],
     react: "🎥",
     desc: "Download YouTube Video & Audio",
     category: "download",
