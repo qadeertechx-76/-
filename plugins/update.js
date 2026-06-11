@@ -4,7 +4,7 @@ const { sleep } = require("../lib/functions");
 cmd({  
     pattern: "restart", 
     alias: ["update", "up"], 
-    desc: "Restart RAHMAN-MD",  
+    desc: "Restart 𝐐𝐀𝐃𝚵𝚵𝐑-𝐊𝐃",  
     category: "owner",  
     filename: __filename  
 },  
