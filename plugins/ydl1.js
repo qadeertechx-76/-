@@ -1,64 +1,93 @@
 const axios = require("axios");
 const yts = require("yt-search");
+const config = require("../config");
 const { cmd } = require("../command");
 
 cmd({
-    pattern: "song",
-    alias: ["play", "ytmp3", "music", "audio"],
+    pattern: "play",
+    alias: ["ytmp3", "song"],
     react: "🎵",
-    desc: "Download YouTube audio by name or URL",
+    desc: "Download YouTube Audio",
     category: "download",
     filename: __filename
 },
 async (conn, mek, m, { from, q, reply }) => {
     try {
-        if (!q) return reply("❌ Please provide a song name or YouTube URL");
 
-        let ytUrl = q;
+        if (!q) return reply("❌ Please give YouTube URL or song name");
 
-        // If URL not to search it
+        let url = q;
+
+        // Search name support
         if (!q.includes("youtube.com") && !q.includes("youtu.be")) {
-            const search = await yts(q);
-            if (!search.all.length) return reply("❌ Song not found");
-
-            ytUrl = search.all[0].url;
+            let search = await yts(q);
+            if (!search.videos.length) return reply("❌ Song not found");
+            url = search.videos[0].url;
         }
 
-        const api = `https://api.azbry.com/api/download/ytmp3?url=${encodeURIComponent(ytUrl)}`;
-        const { data } = await axios.get(api);
+        await conn.sendMessage(from, {
+            react: {
+                text: "⏳",
+                key: mek.key
+            }
+        });
 
-        if (!data.status) return reply("❌ Failed to fetch audio");
+        let api = `https://arslan-apis-v2.vercel.app/download/ytmp3?url=${encodeURIComponent(url)}`;
 
-        const res = data.result;
+        let res = await axios.get(api);
 
-        let caption = `
-╭━━━━━━━━━━━━━━━⪼
-┃⫸ *Title:* ${res.title}
-┃⫸ *Format:* ${res.format}
-╰━━━━━━━━━━━━━━━⪼
-`;
+        if (!res.data.status) {
+            return reply("❌ Download failed");
+        }
 
-        await conn.sendMessage(
-            from,
-            {
-                image: { url: res.thumbnail },
-                caption
+        let data = res.data.result;
+
+        let title = data.metadata.title;
+        let audioUrl = data.download.url;
+
+        // Thumbnail first
+        let thumb = `https://i.ytimg.com/vi/${url.split("v=")[1]?.split("&")[0] || ""}/hqdefault.jpg`;
+
+        await conn.sendMessage(from, {
+            image: { url: thumb },
+            caption: `
+🎵 *YOUTUBE AUDIO DOWNLOADER*
+🎧 Title: ${title}
+📀 Quality: ${data.download.quality}
+> Powered by Qadeer-KD
+            `
+        }, { quoted: mek });
+
+
+        // Audio send after info
+        await conn.sendMessage(from, {
+            audio: {
+                url: audioUrl
             },
-            { quoted: mek }
-        );
+            mimetype: "audio/mpeg",
+            fileName: `${title}.mp3`
+        }, { quoted: mek });
 
-        await conn.sendMessage(
-            from,
-            {
-                audio: { url: res.download },
-                mimetype: "audio/mpeg",
-                fileName: `${res.title}.mp3`
-            },
-            { quoted: mek }
-        );
+
+        await conn.sendMessage(from, {
+            react: {
+                text: "✅",
+                key: mek.key
+            }
+        });
+
 
     } catch (e) {
+
         console.log(e);
-        reply(`❌ Error: ${e.message}`);
+
+        await conn.sendMessage(from, {
+            react: {
+                text: "❌",
+                key: mek.key
+            }
+        });
+
+        reply("❌ Error: " + e.message);
     }
 });
