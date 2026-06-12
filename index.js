@@ -355,7 +355,7 @@ async function connectToWA() {
             console.log('Bot connected to whatsapp ✅');
             
             // 🔥 ULTRA FAST CONNECT MESSAGE ADDED
-            let up = `*Hello there ZAIDI-MD~ User! \ud83d\udc4b\ud83c\udffb* \n\n> Simple , Straight Forward But Loaded With Features \ud83c\udf8a, Meet 𝘽𝙊𝙎𝙎-𝙈𝘿 WhatsApp Bot.\n\n *Thanks for using 𝘽𝙊𝙎𝙎-𝙈𝘿 \ud83d\udea9* \n\n> Join WhatsApp Channel :- ⤵️\n \nhttps://whatsapp.com/channel/0029VbC210i2P59dHYVlXW1K \n\n- *YOUR PREFIX:* = ${prefix}\n\nDont forget to give star to repo ⬇️\n\nhttps://github.com/𝐁𝐎𝐒𝐒-𝐌𝐃-BOTZ/Boss-Ai\n\n> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝓑𝓞𝓢𝓢-𝓜𝓓 ❣️ \ud83d\udda4`;
+            let up = `*Hello there QADEER-KD~ User! \ud83d\udc4b\ud83c\udffb* \n\n> Simple , Straight Forward But Loaded With Features \ud83c\udf8a, Meet 𝘽𝙊𝙎𝙎-𝙈𝘿 WhatsApp Bot.\n\n *Thanks for using 𝘽𝙊𝙎𝙎-𝙈𝘿 \ud83d\udea9* \n\n> Join WhatsApp Channel :- ⤵️\n \nhttps://whatsapp.com/channel/0029VbC210i2P59dHYVlXW1K \n\n- *YOUR PREFIX:* = ${prefix}\n\nDont forget to give star to repo ⬇️\n\nhttps://github.com/𝐁𝐎𝐒𝐒-𝐌𝐃-BOTZ/Boss-Ai\n\n> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ 𝓑𝓞𝓢𝓢-𝓜𝓓 ❣️ \ud83d\udda4`;
             
             setTimeout(() => {
                 conn.sendMessage(conn.user.id, { 
