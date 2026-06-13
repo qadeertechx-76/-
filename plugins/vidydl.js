@@ -1,105 +1,162 @@
-const { cmd } = require("../command");
 const axios = require("axios");
 const yts = require("yt-search");
+const { cmd } = require("../command");
 
 cmd({
     pattern: "ytmp4",
-    alias: ["video", "ytvideo", "yt"],
+    alias: ["ytvideo", "video"],
+    react: "🎬",
     desc: "Download YouTube Video",
     category: "download",
-    react: "🎬",
-    use: ".ytmp4 <url/song name>",
     filename: __filename
 },
-async (conn, mek, m, { from, q, reply }) => {
-    try {
 
-        if (!q) {
-            return await reply(
-                "🎬 Please provide a YouTube URL or Song Name!\n\nExample:\n.ytmp4 zahe muqaddar\n.ytmp4 https://youtu.be/xxxxx"
-            );
-        }
+async (conn, mek, m, { from, args, reply }) => {
 
-        await conn.sendMessage(from, {
-            react: { text: "⬇️", key: mek.key }
-        });
+try {
 
-        let vid = null;
-        let videoUrl = q;
+let text = args.join(" ");
 
-        // Search by name
-        if (!q.includes("youtube.com") && !q.includes("youtu.be")) {
-            const { videos } = await yts(q);
+if (!text) {
+return reply(
+`╭┉◉◉◉⍟
+┃ ❌ *Give YouTube name/url*
+┃
+┃ Example:
+┃ .ytmp4 Shape of You
+┃ .ytmp4 https://youtu.be/xxxx
+╰┉◉◉◉⍟
 
-            if (!videos || videos.length === 0) {
-                return await reply("❌ No results found!");
-            }
+> ʀᴀʜᴍᴀɴ-ᴍᴅ`
+);
+}
 
-            vid = videos[0];
-            videoUrl = vid.url;
-        }
 
-        // Download API
-        const { data } = await axios.get(
-            `https://api.azbry.com/api/download/ytmp4?url=${encodeURIComponent(videoUrl)}`
-        );
+await conn.sendMessage(from,{
+react:{
+text:"⏳",
+key:mek.key
+}
+});
 
-        if (!data?.status || !data?.result) {
-            return await reply("❌ Failed to fetch video!");
-        }
 
-        const video = data.result;
+// URL or Search
 
-        // Fallback metadata for direct URL
-        if (!vid) {
-            vid = {
-                title: video.title || "Unknown Title",
-                thumbnail: video.thumbnail,
-                timestamp: "Unknown",
-                author: {
-                    name: "Unknown"
-                }
-            };
-        }
+let videoUrl = text;
 
-        // Thumbnail + Info Card
-        await conn.sendMessage(
-            from,
-            {
-                image: { url: vid.thumbnail || video.thumbnail },
-                caption: `‎‎
-*ℹ️ ᴛɪᴛʟᴇ:* ${vid.title}
-‎*🕘 ᴅᴜʀᴀᴛɪᴏɴ:* ${vid.timestamp}
-‎*👤 ᴀᴜᴛʜᴏʀ:* ${vid.author?.name || "Unknown"}
-‎*🎥 ǫᴜᴀʟɪᴛʏ:* ${video.quality}
-‎*📦 ꜰᴏʀᴍᴀᴛ:* ${video.format}`
-            },
-            { quoted: mek }
-        );
 
-        // Send Video
-        await conn.sendMessage(
-            from,
-            {
-                video: { url: video.download },
-                mimetype: "video/mp4",
-                fileName: `${vid.title}.mp4`,
-                caption: `🎬 *${vid.title}*`
-            },
-            { quoted: mek }
-        );
+if(!text.includes("youtube.com") && !text.includes("youtu.be")){
 
-        await conn.sendMessage(from, {
-            react: { text: "✅", key: mek.key }
-        });
+let result = await yts(text);
 
-    } catch (e) {
-        console.error("YTMP4 Error:", e);
+if(!result.videos || result.videos.length === 0){
+return reply("❌ Video not found");
+}
 
-        await conn.sendMessage(from, {
-            react: { text: "❌", key: mek.key }
-        });
+videoUrl = result.videos[0].url;
 
-        await reply("❌ Error occurred while downloading video!");
-    }
+}
+
+
+
+// API CALL
+
+let api = 
+`https://api.delirius.store/download/ytmp4?url=${encodeURIComponent(videoUrl)}&format=360p`;
+
+
+let response = await axios.get(api);
+
+
+if(!response.data.status){
+return reply("❌ API Error");
+}
+
+
+
+let data = response.data.data;
+
+
+if(!data.download){
+return reply("❌ Download link not found");
+}
+
+
+
+
+let caption = 
+`╭┉◉◉◉⍟
+┃ 🎬 *YOUTUBE VIDEO*
+┃
+┃ 🎵 *Title:* ${data.title}
+┃ 👤 *Author:* ${data.author}
+┃ 👀 *Views:* ${data.views}
+┃ ❤️ *Likes:* ${data.likes}
+╰┉◉◉◉⍟
+> Oowered by Qadeer-KD`;
+
+
+
+// SEND THUMBNAIL FIRST
+
+await conn.sendMessage(from,
+{
+image:{
+url:data.image
+},
+caption:caption
+},
+{
+quoted:mek
+});
+
+
+
+
+// SEND VIDEO
+
+await conn.sendMessage(from,
+{
+video:{
+url:data.download
+},
+mimetype:"video/mp4",
+fileName:`${data.title}.mp4`,
+caption:
+`🎬 ${data.title}
+
+> powered by rahman-md`
+},
+{
+quoted:mek
+});
+
+
+
+await conn.sendMessage(from,{
+react:{
+text:"✅",
+key:mek.key
+}
+});
+
+
+}catch(err){
+
+console.log(err);
+
+await conn.sendMessage(from,{
+react:{
+text:"❌",
+key:mek.key
+}
+});
+
+reply(
+`❌ Error:
+${err.message}`
+);
+
+}
+
 });
