@@ -4,7 +4,7 @@ const { cmd } = require("../command");
 
 cmd({
     pattern: "ytmp4",
-    alias: ["ytvideo", "video"],
+    alias: ["ytvideo", "video", "yt"],
     react: "🎬",
     desc: "Download YouTube Video",
     category: "download",
@@ -27,7 +27,7 @@ return reply(
 ┃ .ytmp4 https://youtu.be/xxxx
 ╰┉◉◉◉⍟
 
-> ʀᴀʜᴍᴀɴ-ᴍᴅ`
+> Pᴏᴡᴇʀᴇᴅ Bʏ Rahman X Qadeer-KD`
 );
 }
 
@@ -93,7 +93,7 @@ let caption =
 ┃ 👀 *Views:* ${data.views}
 ┃ ❤️ *Likes:* ${data.likes}
 ╰┉◉◉◉⍟
-> Oowered by Qadeer-KD`;
+> Pᴏᴡᴇʀᴇᴅ Bʏ Rahman X Qadeer-KD`;
 
 
 
@@ -125,7 +125,7 @@ fileName:`${data.title}.mp4`,
 caption:
 `🎬 ${data.title}
 
-> powered by rahman-md`
+> Pᴏᴡᴇʀᴇᴅ Bʏ Rahman X Qadeer-KD`
 },
 {
 quoted:mek
