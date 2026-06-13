@@ -33,7 +33,7 @@ async (conn, mek, m, { from, q, reply }) => {
 │✅ Status : Success
 │🎬 Video : ${data.videoUrl}
 │🚀 Response : ${data.response?.success || "Success"}
-│🤖 Source : ʀᴀʜᴍᴀɴ-ᴍᴅ
+│🤖 Source : ʀᴀʜᴍᴀɴ X ǫᴀᴅᴇᴇʀ-ᴋᴅ
 │🕓 Time : ${data.timestamp}
 ╰┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉⍟
 `;
