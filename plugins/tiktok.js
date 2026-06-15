@@ -59,7 +59,7 @@ async (conn, mek, m, { from, q, reply }) => {
                 url: result.videoUrl
             },
             mimetype: "video/mp4",
-            caption: "*_✎﹏ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʀᴀʜᴍᴀɴ x ϙᴀᴅᴇᴇʀ-ᴋᴅ_-*"
+            caption: "*_✎﹏ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʀᴀʜᴍᴀɴ x ϙᴀᴅᴇᴇʀ_*"
         }, { quoted: mek });
 
 
