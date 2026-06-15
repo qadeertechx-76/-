@@ -33,7 +33,7 @@ cmd({
         let data = res.data.result;
 
         let caption = `
-╭━━━━━━━━━━━━━━━━━━━━⍟
+╭━━━━━━━━━━━━━━━━━━⍟
 ┃ 🎵 ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ
 ┃
 ┃ 👤 Author: ${data.author.name}
@@ -42,7 +42,7 @@ cmd({
 ┃
 ┃ 📝 Title: ${data.title}
 ┃ 
-╰━━━━━━━━━━━━━━━━━━━━⍟
+╰━━━━━━━━━━━━━━━━━━⍟
 `;
 
         await conn.sendMessage(from, {
@@ -57,7 +57,7 @@ cmd({
             video: {
                 url: data.video
             },
-            caption: "🎬 TikTok Video\n\n> Pᴏᴡᴇʀᴇᴅ Bʏ Qᴀᴅᴇᴇʀ-KD"
+            caption: "*_✎﹏ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʀᴀʜᴍᴀɴ x ϙᴀᴅᴇᴇʀ_*"
         }, { quoted: mek });
 
 
