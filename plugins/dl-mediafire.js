@@ -1,55 +1,77 @@
-const { cmd } = require('../command');
-const axios = require('axios');
-const path = require('path');
+const axios = require("axios");
+const { cmd } = require("../command");
 
 cmd({
     pattern: "mediafire",
-    alias: ["mf", "mfire", "mfdown"],
-    desc: "Download and send files from MediaFire",
-    category: "downloader",
-    react: "📦",
+    alias: ["mfire", "mf"],
+    desc: "Download MediaFire files",
+    category: "download",
+    react: "📥",
     filename: __filename
-},
-async (conn, mek, m, { from, args, q, reply, react }) => {
+}, async (conn, mek, m, { from, q, reply }) => {
+
     try {
-        // Validate user input
-        if (!q) return reply("Please provide a MediaFire file link.\nExample: `.mediafire <url>`");
 
-        // Hit the MediaFire API
-        const apiUrl = `https://api.ootaizumi.web.id/downloader/mediafire?url=${encodeURIComponent(q)}`;
-        const { data } = await axios.get(apiUrl);
+        if (!q) return reply("📌 MediaFire link Give me");
 
-        if (!data || !data.result || !data.result.url) {
-            await react("❌");
-            return reply("Failed to retrieve the MediaFire file. Please check the link or try again later.");
+        await conn.sendMessage(from, {
+            react: {
+                text: "⏳",
+                key: mek.key
+            }
+        });
+
+        const api = `https://backend1.tioo.eu.org/MediaFire?url=${encodeURIComponent(q)}`;
+
+        const { data } = await axios.get(api);
+
+        if (!data.status) {
+            return reply("❌ File download nahi mili");
         }
 
-        const res = data.result;
+        let caption = `
+*MEDIAFIRE DOWNLOADER*
 
-        // Prepare info message
-        await reply(
-            `📥 *Downloading File from MediaFire...*\n\n` +
-            `*📄 Name:* ${res.name}\n` +
-            `*📏 Size:* ${res.size}\n` +
-            `*📅 Date:* ${res.date}\n` +
-            `*🗂 Type:* ${res.type}\n\n` +
-            `> Qadeer KD`
-        );
+📂 *Name:* ${data.filename}
+📦 *Size:* ${data.filesizeH}
+📁 *Type:* ${data.type}
+🗓️ *Upload:* ${data.upload_date}
+👤 *Owner:* ${data.owner}
 
-        // Download the actual file buffer
-        const response = await axios.get(res.url, { responseType: 'arraybuffer' });
+> powered by QADEER-KD
+`;
 
-        // Send the file to WhatsApp chat
         await conn.sendMessage(from, {
-            document: Buffer.from(response.data),
-            mimetype: 'application/octet-stream',
-            fileName: res.name
+            document: {
+                url: data.url
+            },
+            mimetype: data.mimetype,
+            fileName: data.filename,
+            caption: caption
         }, { quoted: mek });
 
-        await react("✅");
+
+        await conn.sendMessage(from, {
+            react: {
+                text: "✅",
+                key: mek.key
+            }
+        });
+
+
     } catch (e) {
-        console.error("Error in MediaFire command:", e);
-        await react("❌");
-        reply("An error occurred while downloading or sending the MediaFire file.");
+
+        console.log(e);
+
+        await conn.sendMessage(from, {
+            react: {
+                text: "❌",
+                key: mek.key
+            }
+        });
+
+        reply("❌ Error while downloading file");
+
     }
+
 });
