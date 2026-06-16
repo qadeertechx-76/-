@@ -3,17 +3,20 @@ const { cmd } = require("../command");
 
 cmd({
     pattern: "tiktok",
-    alias: ["tt", "ttdl", "tiktokdl"],
-    desc: "Download TikTok video with audio",
-    category: "download",
-    react: "🎵",
+    alias: ["tt", "tikdl"],
+    desc: "Download TikTok video",
+    category: "downloader",
+    react: "⬇️",
     filename: __filename
-},
-async (conn, mek, m, { from, q, reply }) => {
+}, async (conn, mek, m, { from, quoted, args, reply }) => {
 
     try {
 
-        if (!q) return reply("❌ Please send TikTok URL");
+        if (!args[0]) {
+            return reply("❌ Please provide TikTok link");
+        }
+
+        let url = args[0];
 
         await conn.sendMessage(from, {
             react: {
@@ -23,56 +26,40 @@ async (conn, mek, m, { from, q, reply }) => {
         });
 
 
-        let api = `https://api.princetechn.com/api/download/tiktokdlv4?apikey=prince&url=${encodeURIComponent(q)}`;
+        let api = `https://axlyapi.qzz.io/download/tiktok?url=${encodeURIComponent(url)}`;
 
-        let response = await axios.get(api);
+        let { data } = await axios.get(api);
 
-        if (!response.data.success || response.data.status !== 200) {
-            return reply("❌ TikTok download failed");
+        if (!data.status) {
+            return reply("❌ Failed to fetch TikTok video");
         }
 
 
-        let result = response.data.result;
-
+        let result = data.result.data;
 
         let caption = `
-*╭┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉━┈᛭*
-*│•*👤 *ᴜsᴇʀɴᴀᴍᴇ:* ${result.username}
-*│•*📝 *ᴛɪᴛʟᴇ:* ${result.title}‎
-*╰┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉━┈᛭*
+‎*╭ׂ┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇┄─̇─̣┄᛭*
+‎*┋ ─̣─̇─̣╌⊰ ϙᴀᴅᴇᴇʀ-ᴋᴅ ⊱─̣─̇─̣╌*
+‎*┋┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇┄─̇─̣┄᛭*
+‎*┋*❀ 📌 *ᴛɪᴛʟᴇ:* ${result.title || "No title"}
+‎*┋*❀ 👤 *ᴀᴜᴛʜᴏʀ:* ${result.author?.nickname || "Unknown"}
+‎*┋*❀ 👁️ *ᴠɪᴇᴡs:* ${result.play_count || "0"}
+‎*┋*❀ ❤️ *ʟɪᴋᴇs:* ${result.digg_count || "0"}
+‎*┋*❀ 💬 *ᴄᴏᴍᴍᴇɴᴛs:* ${result.comment_count || "0"}
+‎*┋*❀ 
+‎*╰┄─̇─̣┄─̇─̣┄─̇─̣┄─̇─̣┄─̇┄─̇─̣┄᛭*
 `;
 
-
-        // Thumbnail + Info
         await conn.sendMessage(from, {
-            image: {
-                url: result.thumbnailUrl
-            },
+            image: { url: result.cover },
             caption: caption
         }, { quoted: mek });
 
 
-
-        // Video Send
         await conn.sendMessage(from, {
-            video: {
-                url: result.videoUrl
-            },
-            mimetype: "video/mp4",
+            video: { url: result.play },
             caption: "*_✎﹏ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʀᴀʜᴍᴀɴ x ϙᴀᴅᴇᴇʀ_*"
         }, { quoted: mek });
-
-
-
-        // Audio Send
-        await conn.sendMessage(from, {
-            audio: {
-                url: result.audioUrl
-            },
-            mimetype: "audio/mpeg",
-            fileName: "tiktok-audio.mp3"
-        }, { quoted: mek });
-
 
 
         await conn.sendMessage(from, {
@@ -88,13 +75,6 @@ async (conn, mek, m, { from, q, reply }) => {
         console.log(e);
 
         reply("❌ Error: " + e.message);
-
-        await conn.sendMessage(from, {
-            react: {
-                text: "❌",
-                key: mek.key
-            }
-        });
 
     }
 
